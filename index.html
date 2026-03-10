@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>CRIEITI — Direção Criativa Digital</title>
+    
+    <!-- FAVICON -->
+    <!-- 
+        COMO ADICIONAR SEU FAVICON (Ícone da aba do navegador):
+        1. Coloque sua imagem na mesma pasta do index.html (ex: 'favicon.png' ou 'favicon.ico')
+        2. Substitua o link do href abaixo por: 'favicon.png'
+    -->
+    <link rel="icon" href="logo1.png" type="image/svg+xml">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS via CDN for Pure HTML Standalone -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // =====================================================================
+        // CONFIGURAÇÃO DO TAILWIND CSS
+        // Aqui definimos as cores, fontes e extensões do framework CSS
+        // =====================================================================
+        tailwind.config = {
+            theme: {
+                extend: {
+                    // Define as fontes do Google Fonts importadas acima
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'], // Fonte de textos normais
+                        display: ['Sora', 'sans-serif'], // Fonte de Títulos
+                    },
+                    // Define a paleta de cores Neon para usarmos nas classes (ex: text-neon-cyan, bg-neon-red)
+                    colors: {
+                        'neon-cyan': '#00f0ff',
+                        'neon-purple': '#bf00ff',
+                        'neon-pink': '#ff00aa',
+                        'neon-green': '#00ff88',
+                        'neon-red': '#ff1a1a',
+                        'neon-blue': '#0066ff',
+                        'bg-main': '#030305', // Cor de fundo principal super escura
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* =====================================================================
+           VARIÁVEIS DE CORES NEON (CSS Nativo)
+           Usadas para facilitar a troca de cores em todo o CSS
+           ===================================================================== */
+        :root {
+            --neon-cyan: #35d1dc;
+            --neon-purple: #0078ac;
+            --neon-pink: #7e17df;
+            --neon-green: #00eaff;
+            --neon-red: #11b7e5;
+            --neon-blue: #00ddff;
+        }
+
+        /* =====================================================================
+           ANIMAÇÕES CUSTOMIZADAS
+           ===================================================================== */
+        
+        /* 1. Rotação Lenta (Usada no gradiente borrado atrás do título da Home) */
+        @keyframes spin-slow {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }
+
+        /* 2. Varredura de Barra (Usada no botão "Método Comprovado" na Metodologia) */
+        @keyframes m-cr-bar-sweep {
+            from { transform: translateX(-100%); } /* Começa fora da tela à esquerda */
+            to { transform: translateX(100%); }    /* Termina fora da tela à direita */
+        }
+
+        .animate-bar-sweep {
+            animation: m-cr-bar-sweep 4s infinite linear;
+        }
+
+        /* 3. Gradiente Contínuo para a Esquerda (Usado no botão Contato e texto Máquina de Vendas) */
+        @keyframes gradient-pan-left {
+            0% { background-position: 200% 50%; } /* Inicia a posição do fundo na direita */
+            100% { background-position: 0% 50%; } /* Move a posição do fundo para a esquerda */
+        }
+
+        .animate-gradient-left {
+            /* Cria um degradê com as cores se repetindo no final para o loop ser perfeito */
+            background-image: linear-gradient(to right, var(--neon-cyan), var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+            background-size: 200% auto; /* Dobra o tamanho do fundo para permitir o movimento */
+            animation: gradient-pan-left 4s linear infinite; /* Aplica a animação infinitamente */
+        }
+
+        /* 4. Pulsação Lenta (Usada nos orbes de luz de fundo) */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.15; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 12s ease-in-out infinite;
+        }
+
+        /* =====================================================================
+           TRANSIÇÕES DE PÁGINA (SPA - Single Page Application)
+           ===================================================================== */
+        /* Estado padrão de todas as páginas: Escondidas e transparentes */
+        .page-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Estado ativo: Visível e opacidade 100% */
+        .page-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* =====================================================================
+           EFEITO GLASSMORPHISM (Vidro)
+           ===================================================================== */
+        .glass {
+            background: rgba(255, 255, 255, 0.05); /* Fundo branco quase transparente */
+            backdrop-filter: blur(16px); /* Desfoca o que está atrás */
+            -webkit-backdrop-filter: blur(16px); /* Suporte para navegadores Apple */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+        }
+
+        /* =====================================================================
+           ORBES DA METODOLOGIA (Flutuação)
+           ===================================================================== */
+        .orb-float {
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); } /* Posição inicial e final */
+            50% { transform: translateY(-20px); }  /* Sobe 20 pixels no meio da animação */
+        }
+
+        /* =====================================================================
+           GRANULADO CINEMATOGRÁFICO (Film Grain)
+           Este filtro cria uma textura de cinema por cima de todo o site
+           ===================================================================== */
+        .site-noise {
+            position: fixed; /* Fica fixo na tela toda */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Ignora cliques */
+            z-index: 9999; /* Fica por cima de tudo */
+            opacity: 0.12; /* Aumentado para um efeito mais cinematográfico */
+            /* Gera um ruído visual usando SVG nativo com frequência ajustada para grão fino */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay; /* Mistura o ruído com as cores do fundo */
+        }
+
+        /* =====================================================================
+           SISTEMA SOLAR / GALÁXIA (Seção Metodologia)
+           ===================================================================== */
+        /* Container que dá a perspectiva 3D */
+        .m-cr-galaxy-viewport {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* O mapa galáctico que é inclinado em 65 graus (rotateX) */
+        .m-cr-galaxy-map {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1200px;
+            height: 1200px;
+            transform: translate(-50%, -50%) rotateX(65deg);
+            transform-style: preserve-3d;
+        }
+
+        /* Linhas das órbitas (círculos tracejados) */
+        .m-cr-orbits-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+        }
+
+        /* Cometa 1 (Ciano) */
+        .m-cr-fast-comet {
+            /* Desenha o caminho circular que o cometa vai seguir */
+            offset-path: path('M 600,600 m -300,0 a 300,300 0 1,0 600,0 a 300,300 0 1,0 -600,0');
+            animation: comet-orbit 8s linear infinite; /* Dá a volta em 8 segundos */
+            width: 4px;
+            height: 4px;
+            background: #acfeff;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 20px 2px #7ffff2, 0 0 40px 4px var(--neon-cyan); /* Brilho ciano */
+        }
+
+        /* Cometa 2 (Roxo) - Gira no sentido contrário (reverse) */
+        .m-cr-fast-comet-2 {
+            offset-path: path('M 600,600 m -450,0 a 450,450 0 1,0 900,0 a 450,450 0 1,0 -900,0');
+            animation: comet-orbit 12s linear infinite reverse;
+            width: 3px;
+            height: 3px;
+            background: #cdb0ff;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 15px 2px #bd86ff, 0 0 30px 4px var(--neon-purple); /* Brilho roxo */
+        }
+
+        /* Animação de movimento dos cometas */
+        @keyframes comet-orbit {
+            0% { offset-distance: 0%; opacity: 0; } /* Começa invisível no início do caminho */
+            5% { opacity: 1; } /* Aparece rapidamente */
+            95% { opacity: 1; } /* Fica visível quase até o fim */
+            100% { offset-distance: 100%; opacity: 0; } /* Some ao completar a volta */
+        }
+
+        /* Container das estrelas geradas pelo JS */
+        .m-cr-space-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        /* Estilo base de cada estrela */
+        .m-cr-star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: star-twinkle var(--d) infinite ease-in-out; /* Usa a variável --d definida no JS para o tempo */
+        }
+
+        /* Animação de piscar das estrelas */
+        @keyframes star-twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Poeira estelar (Fundo cheio de pontinhos gerado via gradiente) */
+        .m-cr-dense-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 50px 160px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 80px 120px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 110px 10px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 150px 150px, #fff, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            opacity: 0.1;
+        }
+
+        /* =====================================================================
+           EFEITOS DE GLOW (BRILHO NEON) NOS SERVIÇOS
+           ===================================================================== */
+        .neon-glow-green { box-shadow: 0 0 20px rgba(0, 255, 51, 0.2); }
+        .neon-glow-red { box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); }
+        .neon-glow-blue { box-shadow: 0 0 20px rgba(0, 136, 255, 0.2); }
+        
+        /* Aumenta o brilho quando passa o mouse por cima (hover) */
+        .group:hover .neon-glow-green { box-shadow: 0 0 40px rgba(0, 255, 136, 0.4); }
+        .group:hover .neon-glow-red { box-shadow: 0 0 40px rgba(255, 26, 26, 0.4); }
+        .group:hover .neon-glow-blue { box-shadow: 0 0 40px rgba(0, 110, 255, 0.4); }
+
+        /* =====================================================================
+           EFEITO DE BORDA NEON SEGUINDO O MOUSE (BLOCOS DE SERVIÇOS)
+           ===================================================================== */
+        .neon-border-card {
+            background: #0a0a0f !important; /* Fundo sólido, não transparente */
+            border: none !important;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        /* O gradiente radial que segue o mouse */
+        .neon-border-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Usa as variáveis --mouse-x e --mouse-y atualizadas pelo JS */
+            background: radial-gradient(
+                400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                var(--neon-color),
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -2;
+        }
+        
+        /* A "tampa" sólida que esconde o meio do gradiente, deixando só a borda */
+        .neon-border-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px; /* Espessura da borda neon */
+            background: #0a0a0f; /* Mesmo fundo sólido interno */
+            border-radius: 15px; /* Arredondamento interno para encaixar no rounded-2xl */
+            z-index: -1;
+        }
+        
+        /* Mostra o brilho quando passa o mouse */
+        .neon-border-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* Variáveis de cor para cada bloco (com opacidade ajustada para o gradiente) */
+        .neon-card-green { --neon-color: rgba(0, 255, 68, 0.8); }
+        .neon-card-red { --neon-color: rgba(255, 13, 53, 0.8); }
+        .neon-card-blue { --neon-color: rgba(0, 30, 255, 0.8); }
+
+        /* =====================================================================
+           ANIMAÇÃO DE REVELAÇÃO AO ROLAR (SCROLL BLUR)
+           ===================================================================== */
+        .reveal-blur {
+            opacity: 0;
+            filter: blur(15px);
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, filter 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, filter, transform;
+        }
+
+        .reveal-blur.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-[#030305] text-slate-200 font-sans selection:bg-neon-cyan/30">
+
+    <!-- FILTRO CINEMATOGRÁFICO DE GRANULADO (FILM GRAIN) - ESTA É A PARTE QUE VOCÊ PEDIU -->
+    <div class="site-noise"></div>
+
+    <!-- BACKGROUND -->
+    <div class="fixed inset-0 -z-10 bg-black overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <!-- 
+                COMO ADICIONAR SEU VÍDEO DE FUNDO LOCAL:
+                1. Coloque seu vídeo na pasta 'videos' (ex: 'fundo.mp4')
+                2. Substitua o link do src abaixo por: 'videos/fundo.mp4'
+            -->
+            <video id="bg-video" autoplay loop muted playsinline class="w-full h-full object-cover">
+                <source src="FUNDO5.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <!-- PLANO CARTESIANO (LINHAS DE FUNDO) -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(circle_at_center,black_60%,transparent_100%)]"></div>
+        
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_50%,rgba(0,0,0,0.95)_100%)]"></div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-6 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#" onclick="showPage('home'); return false;" class="group flex items-center gap-3">
+                <!-- 
+                    COMO ADICIONAR SUA LOGO NO CABEÇALHO:
+                    1. Coloque sua imagem na pasta 'imagens' (ex: 'logo.png')
+                    2. Substitua o link do src abaixo por: 'imagens/logo.png'
+                -->
+                <img src="logo1.png" alt="Logo CRIEITI" class="h-8 w-auto object-contain">
+                <span class="font-display font-bold text-xl tracking-[0.2em] text-white group-hover:text-neon-cyan transition-colors duration-300">
+                    CRIEITI
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-12">
+                <a href="#servicos" onclick="scrollToId('servicos'); return false;" class="text-sm font-medium text-slate-400 hover:text-white transition-colors relative group">
+                    Serviços
+                    <span class="absolute -bottom-1 left-0 w-0 h-px bg-neon-cyan transition-all duration-300 group-hover:w-full shadow-[0_0_8px_#00f0ff]"></span>
+                </a>
+                <a href="#metodologia" onclick="scrollToId('metodologia'); return false;" class="text-sm font-medium text-slate-400 hover:text-white transition-colors relative group">
+                    Metodologia
+                    <span class="absolute -bottom-1 left-0 w-0 h-px bg-neon-cyan transition-all duration-300 group-hover:w-full shadow-[0_0_8px_#00f0ff]"></span>
+                </a>
+                <a href="#portfolio" onclick="scrollToId('portfolio'); return false;" class="text-sm font-medium text-slate-400 hover:text-white transition-colors relative group">
+                    Portfólio
+                    <span class="absolute -bottom-1 left-0 w-0 h-px bg-neon-cyan transition-all duration-300 group-hover:w-full shadow-[0_0_8px_#00f0ff]"></span>
+                </a>
+                
+                <!-- 
+                    COMO PERSONALIZAR O LINK DE EDUCAÇÃO:
+                    1. Altere o 'href' abaixo para o seu link (ex: 'https://seucurso.com')
+                -->
+                <a href="https://linktr.ee/Crieiti" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition-colors relative group">
+                    Educação
+                    <span class="absolute -bottom-1 left-0 w-0 h-px bg-neon-purple transition-all duration-300 group-hover:w-full shadow-[0_0_8px_#bf00ff]"></span>
+                </a>
+
+                <button onclick="window.open('https://linktr.ee/Crieiti', '_blank')" class="px-6 py-2 rounded-full animate-gradient-left text-white text-sm font-bold shadow-[0_0_20px_rgba(191,0,255,0.4)] hover:scale-105 transition-transform">
+                    Contato
+                </button>
+            </div>
+
+            <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/5 backdrop-blur-3xl border-b border-white/10 overflow-hidden transition-all duration-300">
+            <div class="px-6 py-8 flex flex-col gap-6">
+                <a href="#servicos" onclick="scrollToId('servicos'); toggleMobileMenu(); return false;" class="text-lg font-medium text-slate-300">Serviços</a>
+                <a href="#metodologia" onclick="scrollToId('metodologia'); toggleMobileMenu(); return false;" class="text-lg font-medium text-slate-300">Metodologia</a>
+                <a href="#portfolio" onclick="scrollToId('portfolio'); toggleMobileMenu(); return false;" class="text-lg font-medium text-slate-300">Portfólio</a>
+                
+                <!-- LINK EDUCAÇÃO MOBILE -->
+                <a href="https://linktr.ee/Crieiti" target="_blank" class="text-lg font-medium text-slate-300">Educação</a>
+
+                <button onclick="window.open('https://linktr.ee/Crieiti', '_blank')" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white font-bold">
+                    Entrar em Contato
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-container">
+        
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page-view active">
+            
+            <!-- HERO -->
+            <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+                <!-- Luz Pulsante de Fundo (Lenta e com mais Blur) -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-neon-cyan/20 blur-[180px] -z-10 animate-pulse-slow pointer-events-none"></div>
+                
+                <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-conic-gradient from-neon-pink via-neon-purple to-neon-cyan rounded-full blur-[120px] opacity-20 animate-spin-slow pointer-events-none"></div>
+                
+                <div class="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="relative z-10 text-center lg:text-left">
+                        <span class="inline-block text-neon-cyan text-sm font-bold tracking-[0.4em] uppercase mb-6 animate-pulse">
+                            Direção Criativa Digital
+                        </span>
+                        <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-[1.1] mb-8 tracking-tight">
+                            Transforme sua Marca<br>
+                            <span class="animate-gradient-left bg-clip-text text-transparent">
+                                com a Mídia do Futuro
+                            </span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            A Crieiti é uma plataforma de desenvolvimento em Direção Criativa Digital Estratégica, especializada em produtividade com IA.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <button onclick="window.open('https://linktr.ee/Crieiti', '_blank')" class="px-8 py-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan text-neon-cyan font-bold text-lg hover:bg-neon-cyan hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(0,240,255,0.2)]">
+                                Solicitar Arquitetura
+                            </button>
+                            <button onclick="scrollToId('portfolio')" class="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-lg hover:bg-white/10 transition-all">
+                                Ver Portfólio
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <!-- 
+                            VÍDEO DA HOME (AUTO-PLAY SEM CAPA):
+                            Substitua o link do src abaixo pelo seu vídeo local (ex: 'videos/home.mp4')
+                        -->
+                        <div class="aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-2xl group-hover:border-neon-cyan/50 transition-colors duration-500">
+                            <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                                <source src="CRIEITI_HOMEofc.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="absolute -inset-4 bg-neon-cyan/10 blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVIÇOS -->
+            <section id="servicos" class="py-32 relative reveal-blur">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6">Soluções Digitais</h2>
+                        <p class="text-slate-400 text-lg max-w-2xl mx-auto">Três soluções integradas de alta tecnologia para escalar seu negócio e dominar o mercado.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Vendas -->
+                        <div onclick="showPage('vendas')" class="group relative p-8 rounded-2xl neon-border-card neon-card-green hover:scale-[1.02] transition-all duration-500 cursor-pointer">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-neon-green -translate-x-full group-hover:translate-x-0 transition-transform duration-700 z-10"></div>
+                            <div class="mb-8 p-4 rounded-xl bg-white/5 w-fit group-hover:scale-110 transition-transform duration-500 neon-glow-green relative z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-green"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                            <h3 class="text-2xl font-display font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors relative z-10">Mentoria de Gestão Digital</h3>
+                            <p class="text-slate-400 mb-8 leading-relaxed relative z-10">Programa de desenvolvimento focado em estruturação estratégica digital, funil e canais de crescimento.</p>
+                            <ul class="space-y-3 pt-6 border-t border-white/5 relative z-10">
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-green">✦</span> Mentoria Prévia Gratuita</li>
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-green">✦</span> Mapeamento Completo de Funil</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Branding -->
+                        <div onclick="showPage('branding')" class="group relative p-8 rounded-2xl neon-border-card neon-card-red hover:scale-[1.02] transition-all duration-500 cursor-pointer">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-neon-red -translate-x-full group-hover:translate-x-0 transition-transform duration-700 z-10"></div>
+                            <div class="mb-8 p-4 rounded-xl bg-white/5 w-fit group-hover:scale-110 transition-transform duration-500 neon-glow-red relative z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-red"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </div>
+                            <h3 class="text-2xl font-display font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors relative z-10">Imersão em Branding Estratégico</h3>
+                            <p class="text-slate-400 mb-8 leading-relaxed relative z-10">Desenvolvimento estratégico de marca com metodologia estruturada, aplicação prática e direcionamento executivo.</p>
+                            <ul class="space-y-3 pt-6 border-t border-white/5 relative z-10">
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-red">✦</span> Posicionamento de Marca</li>
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-red">✦</span> Direção de Arte High-End</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Studio -->
+                        <div onclick="showPage('studio')" class="group relative p-8 rounded-2xl neon-border-card neon-card-blue hover:scale-[1.02] transition-all duration-500 cursor-pointer">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-neon-blue -translate-x-full group-hover:translate-x-0 transition-transform duration-700 z-10"></div>
+                            <div class="mb-8 p-4 rounded-xl bg-white/5 w-fit group-hover:scale-110 transition-transform duration-500 neon-glow-blue relative z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-blue"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            </div>
+                            <h3 class="text-2xl font-display font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors relative z-10">Estúdio de Direção Criativa com IA</h3>
+                            <p class="text-slate-400 mb-8 leading-relaxed relative z-10">Programa de desenvolvimento prático em direção criativa e construção de narrativas cinematográficas com inteligência artificial aplicada.</p>
+                            <ul class="space-y-3 pt-6 border-t border-white/5 relative z-10">
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-blue">✦</span> Narrativas Cinematográficas AI</li>
+                                <li class="flex items-center gap-3 text-sm text-slate-300"><span class="text-neon-blue">✦</span> Crescimento Exponencial</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- METODOLOGIA -->
+            <section id="metodologia" class="py-32 relative overflow-hidden bg-black reveal-blur">
+                <!-- GALAXY VIEWPORT -->
+                <div class="m-cr-galaxy-viewport">
+                    <div class="m-cr-galaxy-map">
+                        <svg class="m-cr-orbits-svg" viewBox="0 0 1200 1200">
+                            <circle cx="600" cy="600" r="300" fill="none" stroke="white" stroke-width="1" stroke-dasharray="4 8" />
+                            <circle cx="600" cy="600" r="450" fill="none" stroke="white" stroke-width="1" stroke-dasharray="4 8" />
+                        </svg>
+                        <div class="m-cr-fast-comet"></div>
+                        <div class="m-cr-fast-comet-2"></div>
+                        <div class="m-cr-space-field" id="star-field">
+                            <div class="m-cr-dense-stars"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px] [transform:perspective(1200px)_rotateX(70deg)] opacity-40 -z-10"></div>
+                
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-24">
+                        <span class="text-neon-cyan text-xs font-bold tracking-[0.4em] uppercase mb-4 block">Visão de Método</span>
+                        <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-8 max-w-4xl mx-auto leading-tight">
+                            Existe uma engenharia exata para que sua empresa nunca pare de vender.
+                        </h2>
+                        <div class="relative inline-block px-8 py-4 rounded-full bg-neon-cyan/5 border border-neon-cyan/20 overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/10 to-transparent animate-bar-sweep"></div>
+                            <p class="relative text-neon-cyan font-bold">Transforme ideias em vídeos, vídeos em audiência e audiência em vendas.</p>
+                        </div>
+                    </div>
+
+                    <div class="relative h-[600px] flex items-center justify-center mb-24">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-[500px] h-[500px] border border-white/5 rounded-full border-dashed animate-[spin_20s_linear_infinite]"></div>
+                            <div class="absolute w-[400px] h-[400px] border border-white/10 rounded-full border-dashed animate-[spin_15s_linear_infinite_reverse]"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 w-full relative z-10">
+                            <!-- Atenção -->
+                            <div class="flex flex-col items-center text-center group">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float">
+                                    <div class="absolute inset-0 rounded-full bg-neon-red opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-red"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Atenção</h3>
+                                <p class="text-sm text-slate-400 max-w-[180px]">Atrair o público qualificado com precisão cirúrgica.</p>
+                            </div>
+                            <!-- Engajamento -->
+                            <div class="flex flex-col items-center text-center group">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 1s;">
+                                    <div class="absolute inset-0 rounded-full bg-yellow-400 opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Engajamento</h3>
+                                <p class="text-sm text-slate-400 max-w-[180px]">Gerar conexão profunda e autoridade irrefutável.</p>
+                            </div>
+                            <!-- Monetização -->
+                            <div class="flex flex-col items-center text-center group">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 2s;">
+                                    <div class="absolute inset-0 rounded-full bg-neon-green opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-green"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Monetização</h3>
+                                <p class="text-sm text-slate-400 max-w-[180px]">Convertendo leads em faturamento consistente.</p>
+                            </div>
+                            <!-- Retenção -->
+                            <div class="flex flex-col items-center text-center group">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 3s;">
+                                    <div class="absolute inset-0 rounded-full bg-neon-blue opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neon-blue"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Retenção</h3>
+                                <p class="text-sm text-slate-400 max-w-[180px]">Maximizar o valor de cada cliente através de ciclos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PORTFÓLIO -->
+            <section id="portfolio" class="py-32 reveal-blur">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6">Produções</h2>
+                        <p class="text-slate-400 text-lg">Explore nossos projetos desenhados para reter atênção.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Item 1 -->
+                        <!-- 
+                            COMO ADICIONAR SEU VÍDEO DO YOUTUBE:
+                            1. Pegue o link do vídeo (ex: https://www.youtube.com/watch?v=ID)
+                            2. Substitua o link abaixo dentro do openVideoModal
+                        -->
+                        <div onclick="openVideoModal('https://youtube.com/shorts/QqizcUfW42c')" class="group relative aspect-video rounded-2xl overflow-hidden border border-white/10 cursor-pointer">
+                            <!-- Para trocar a imagem de capa, mude o src abaixo para: 'imagens/capa-1.jpg' -->
+                            <img src="IA.jpg" alt="Campanha de Vendas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-neon-cyan/20 backdrop-blur-sm">
+                                <div class="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Burgerverso</h3>
+                                <span class="text-neon-cyan text-sm font-medium uppercase tracking-widest">Propaganda</span>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <!-- 
+                            COMO ADICIONAR SEU VÍDEO DO YOUTUBE:
+                            Substitua o link abaixo pelo link do seu vídeo
+                        -->
+                        <div onclick="openVideoModal('https://youtube.com/shorts/cBbuoHh5nu4')" class="group relative aspect-video rounded-2xl overflow-hidden border border-white/10 cursor-pointer">
+                            <!-- Para trocar a imagem de capa, mude o src abaixo para: 'imagens/capa-2.jpg' -->
+                            <img src="Capturar5.PNG" alt="Branding & Identidade" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-neon-cyan/20 backdrop-blur-sm">
+                                <div class="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Aprenda I.A</h3>
+                                <span class="text-neon-cyan text-sm font-medium uppercase tracking-widest">Criativo</span>
+                            </div>
+                        </div>
+                        <!-- Item 3 -->
+                        <!-- 
+                            COMO ADICIONAR SEU VÍDEO DO YOUTUBE:
+                            Substitua o link abaixo pelo link do seu vídeo
+                        -->
+                        <div onclick="openVideoModal('https://youtu.be/1-U9tIXtd5Q')" class="group relative aspect-video rounded-2xl overflow-hidden border border-white/10 cursor-pointer">
+                            <!-- Para trocar a imagem de capa, mude o src abaixo para: 'imagens/capa-3.jpg' -->
+                            <img src="house.png" alt="Estúdio Digital AI" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-neon-cyan/20 backdrop-blur-sm">
+                                <div class="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Construção com I.A</h3>
+                                <span class="text-neon-cyan text-sm font-medium uppercase tracking-widest">Idéia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA FINAL -->
+            <section class="py-32 text-center relative overflow-hidden reveal-blur">
+                <!-- Luz Pulsante de Fundo (Lenta e com mais Blur) -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-neon-purple/20 blur-[180px] -z-10 animate-pulse-slow"></div>
+                <div class="max-w-4xl mx-auto px-6">
+                    <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-8">Pronto para iniciar a transformação?</h2>
+                    <p class="text-xl text-slate-400 mb-12">Agende uma mentoria de gestão criativa e domine o uso de Inteligência Artificial e design de alto nível para escalar sua autoridade digital.</p>
+                    <button onclick="window.open('https://linktr.ee/Crieiti', '_blank')" class="px-12 py-5 rounded-2xl bg-neon-cyan text-black font-bold text-xl hover:scale-105 hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all">
+                        Solicitar Orçamento
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- SERVICE DETAIL PAGES -->
+        <div id="page-vendas" class="page-view">
+            <div class="pt-32 pb-20 max-w-5xl mx-auto px-6">
+                <button onclick="showPage('home')" class="flex items-center gap-2 text-slate-400 hover:text-neon-cyan mb-12 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar para Home
+                </button>
+                <div class="text-center mb-16">
+                    <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-8">Direcionamento estratégico</h1>
+                    <p class="text-xl text-slate-400 leading-relaxed max-w-3xl mx-auto">Arquitetura de fluxos e mapeamento de funil de alta conversão. Estratégias validadas para otimizar canais através de dados precisos.</p>
+                </div>
+                <!-- 
+                    VÍDEO DA PÁGINA DE VENDAS:
+                    Este bloco cria uma capa para o vídeo. Ao clicar, abre o modal.
+                    Para trocar a imagem de capa, mude o src do <img> abaixo.
+                -->
+                <div onclick="openVideoModal('https://youtu.be/OtqW34kFgK4')" class="group relative aspect-video rounded-3xl overflow-hidden border border-white/10 bg-black shadow-2xl mb-20 cursor-pointer">
+                    <img src="vendascapa1.PNG" alt="Capa Vídeo Vendas" class="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-all duration-700 group-hover:scale-105" referrerPolicy="no-referrer">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <div class="w-20 h-20 rounded-full bg-neon-green/20 border border-neon-green/40 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(0,255,136,0.2)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        </div>
+                        <span class="text-white font-bold tracking-[0.2em] uppercase text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">Visualizar Vídeo</span>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 mb-20">
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-neon-green mb-4">Sessão Estratégica</h3>
+                        <p class="text-slate-300">Agende uma conversa gratuita para entendermos seu cenário atual e traçarmos o melhor caminho.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-white mb-4">Mentoria de Implementação e Gestão de Performance</h3>
+                        <p class="text-slate-300">Acompanhamento estratégico para ativação da metodologia, com análise técnica de métricas e suporte gerencial para otimização de resultados.</p>
+                    </div>
+                </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-branding" class="page-view">
+            <div class="pt-32 pb-20 max-w-5xl mx-auto px-6">
+                <button onclick="showPage('home')" class="flex items-center gap-2 text-slate-400 hover:text-neon-cyan mb-12 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar para Home
+                </button>
+                <div class="text-center mb-16">
+                    <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-8">Imersão em Branding Estratégico</h1>
+                    <p class="text-xl text-slate-400 leading-relaxed max-w-3xl mx-auto">Direção Estratégica de Identidade e Posicionamento Visual</p>
+                </div>
+                <!-- 
+                    VÍDEO DA PÁGINA DE BRANDING:
+                    Este bloco cria uma capa para o vídeo. Ao clicar, abre o modal.
+                -->
+                <div onclick="openVideoModal('https://youtu.be/vbYt7eJay8g')" class="group relative aspect-video rounded-3xl overflow-hidden border border-white/10 bg-black shadow-2xl mb-20 cursor-pointer">
+                    <img src="branding2.png" alt="Capa Vídeo Branding" class="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-all duration-700 group-hover:scale-105" referrerPolicy="no-referrer">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <div class="w-20 h-20 rounded-full bg-neon-red/20 border border-neon-red/40 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(255,26,26,0.2)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        </div>
+                        <span class="text-white font-bold tracking-[0.2em] uppercase text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">Visualizar Vídeo</span>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 mb-20">
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-neon-red mb-4">Sessão Estratégica</h3>
+                        <p class="text-slate-300">Agende uma conversa gratuita para entendermos seu cenário atual e traçarmos o melhor caminho.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-white mb-4">Arquitetura de Identidade e Inteligência de Marca</h3>
+                        <p class="text-slate-300">Estruturação integral da presença visual com curadoria de dados de mercado e ajuste estratégico contínuo para máxima percepção de valor.</p>
+                    </div>
+                </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-studio" class="page-view">
+            <div class="pt-32 pb-20 max-w-5xl mx-auto px-6">
+                <button onclick="showPage('home')" class="flex items-center gap-2 text-slate-400 hover:text-neon-cyan mb-12 transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar para Home
+                </button>
+                <div class="text-center mb-16">
+                    <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-8">Direção Criativa com IA</h1>
+                    <p class="text-xl text-slate-400 leading-relaxed max-w-3xl mx-auto">O futuro do audiovisual. Unimos direção de arte humana com inteligência artificial generativa para o desenvolvimento prático em direção criativa e construção de narrativas cinematográficas.</p>
+                </div>
+                <!-- 
+                    VÍDEO DA PÁGINA DE ESTÚDIO:
+                    Este bloco cria uma capa para o vídeo. Ao clicar, abre o modal.
+                -->
+                <div onclick="openVideoModal('https://youtu.be/fcMfqt1pEGU')" class="group relative aspect-video rounded-3xl overflow-hidden border border-white/10 bg-black shadow-2xl mb-20 cursor-pointer">
+                    <img src="Capturar1AI.PNG" alt="Capa Vídeo Estúdio" class="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-all duration-700 group-hover:scale-105" referrerPolicy="no-referrer">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <div class="w-20 h-20 rounded-full bg-neon-blue/20 border border-neon-blue/40 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(0,110,255,0.2)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        </div>
+                        <span class="text-white font-bold tracking-[0.2em] uppercase text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">Visualizar Vídeo</span>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 mb-20">
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-neon-blue mb-4">Sessão Estratégica</h3>
+                        <p class="text-slate-300">Agende uma conversa gratuita para entendermos seu cenário atual e traçarmos o melhor caminho.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-2xl font-bold text-white mb-4">Direção de Sistemas e Inteligência Criativa</h3>
+                        <p class="text-slate-300">Arquitetura digital estruturada com monitoramento estratégico e otimização contínua baseada em dados.</p>
+                    </div>
+                </div>
+
+ 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black/80 border-t border-white/10 pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-20">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <!-- 
+                            COMO ADICIONAR SUA LOGO NO RODAPÉ:
+                            1. Coloque sua imagem na pasta 'imagens' (ex: 'logo.png')
+                            2. Substitua o link do src abaixo por: 'imagens/logo.png'
+                        -->
+                        <img src="logo1.png" alt="Logo CRIEITI" class="h-12 w-auto object-contain">
+                        <span class="font-display font-bold text-2xl tracking-[0.2em] text-white block">CRIEITI</span>
+                    </div>
+                    <p class="text-slate-400 max-w-sm mb-8 leading-relaxed">
+                        Direção Criativa Digital & Inteligência Artificial. Projetando o futuro das marcas através de tecnologia e arte.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://instagram.com/crieiti" target="_blank" class="p-3 rounded-full bg-white/5 hover:bg-neon-cyan hover:text-black transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://youtube.com/@Crieiti" target="_blank" class="p-3 rounded-full bg-white/5 hover:bg-neon-cyan hover:text-black transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        </a>
+                        <a href="https://www.tiktok.com/@crieiti" target="_blank" class="p-3 rounded-full bg-white/5 hover:bg-neon-cyan hover:text-black transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+                        </a>
+                        <a href="https://linktr.ee/Crieiti" target="_blank" class="p-3 rounded-full bg-white/5 hover:bg-neon-cyan hover:text-black transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Serviços</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><button onclick="showPage('vendas')" class="hover:text-neon-cyan transition-colors">Gestão Digital</button></li>
+                        <li><button onclick="showPage('branding')" class="hover:text-neon-cyan transition-colors">Imersão em Branding</button></li>
+                        <li><button onclick="showPage('studio')" class="hover:text-neon-cyan transition-colors">Direção Criativa com IA</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-6">Empresa</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><button onclick="scrollToId('portfolio')" class="hover:text-neon-cyan transition-colors">Portfólio</button></li>
+                        <li><button onclick="scrollToId('metodologia')" class="hover:text-neon-cyan transition-colors">Metodologia</button></li>
+                        <li><button onclick="window.open('https://linktr.ee/Crieiti', '_blank')" class="hover:text-neon-cyan transition-colors">Contato</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-12 border-t border-white/5 text-center text-slate-500 text-sm">
+                © 2026 CRIEITI. Direitos Reservados. Projetado para o Futuro.
+            </div>
+        </div>
+    </footer>
+
+    <!-- VIDEO MODAL -->
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-black/95 backdrop-blur-xl transition-opacity duration-300 opacity-0">
+        <button onclick="closeVideoModal()" class="absolute top-6 right-6 md:top-10 md:right-10 text-slate-300 hover:text-neon-cyan flex items-center gap-2 transition-colors group z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> 
+            <span class="font-bold tracking-widest uppercase text-sm">Voltar</span>
+        </button>
+        <div class="w-[95vw] md:w-[90vw] h-[85vh] max-w-7xl bg-black rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,240,255,0.1)] relative">
+            <!-- PLAYER PARA VÍDEOS LOCAIS -->
+            <video id="modal-video-player" class="w-full h-full object-contain hidden" controls playsinline>
+                <source src="" type="video/mp4">
+                Seu navegador não suporta a tag de vídeo.
+            </video>
+            
+            <!-- PLAYER PARA VÍDEOS DO YOUTUBE -->
+            <iframe id="modal-youtube-player" class="w-full h-full hidden" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // =====================================================================
+        // 1. SISTEMA DE NAVEGAÇÃO (TROCA DE PÁGINAS) E PAUSA DE VÍDEOS
+        // =====================================================================
+        // Esta função esconde a página atual e mostra a nova página solicitada
+        function showPage(pageId) {
+            // Pausa todos os vídeos interativos ao trocar de página (sair da aba do vídeo)
+            // Isso garante que o som não continue tocando em segundo plano
+            const allVideos = document.querySelectorAll('video');
+            allVideos.forEach(v => {
+                // Não pausamos o vídeo de fundo nem vídeos decorativos (autoplay)
+                if (v.id !== 'bg-video' && !v.hasAttribute('autoplay')) {
+                    v.pause();
+                }
+            });
+
+            // Limpa os iframes do YouTube para parar o som ao trocar de página
+            const allIframes = document.querySelectorAll('iframe');
+            allIframes.forEach(iframe => {
+                // Se não for o do modal, a gente reseta o src (ou manda comando se tiver API)
+                if (iframe.id !== 'modal-youtube-player') {
+                    const currentSrc = iframe.src;
+                    iframe.src = ''; // Para o vídeo
+                    iframe.src = currentSrc; // Reseta para o estado original (sem autoplay se não tiver no link)
+                }
+            });
+            
+            // Fecha o modal de vídeo se estiver aberto
+            closeVideoModal();
+
+            // REGRA: Ao sair de uma página de vídeo (Vendas, Branding, AI), o fundo deve voltar a rodar
+            const bgVideo = document.getElementById('bg-video');
+            if (bgVideo) {
+                bgVideo.play().catch(e => console.log("Autoplay bloqueado ou vídeo não carregado"));
+            }
+
+            // Seleciona todos os elementos que têm a classe '.page-view' (nossas "páginas")
+            const pages = document.querySelectorAll('.page-view');
+            
+            // Passa por cada página e remove a classe 'active' (isso esconde elas via CSS)
+            pages.forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            // Busca o elemento da página que queremos abrir (ex: 'page-vendas')
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                // Adiciona a classe 'active' para tornar esta página visível
+                target.classList.add('active');
+                
+                // Se a página tiver um iframe de vídeo, a gente garante que o fundo pause se o vídeo estiver rodando
+                const pageIframe = target.querySelector('iframe');
+                if (pageIframe && pageIframe.src.includes('youtube.com')) {
+                    if (bgVideo) bgVideo.pause();
+                }
+
+                // Rola a janela de volta para o topo suavemente
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // =====================================================================
+        // 2. ROLAGEM SUAVE PARA SEÇÕES (SCROLL)
+        // =====================================================================
+        // Usado quando clicamos no menu para ir até "Serviços" ou "Portfólio"
+        function scrollToId(id) {
+            // Primeiro garante que estamos na página 'home' (onde as seções existem)
+            showPage('home');
+            
+            // Dá um pequeno atraso (100ms) para garantir que a Home carregou antes de rolar
+            setTimeout(() => {
+                const el = document.getElementById(id); // Encontra a seção pelo ID
+                if (el) {
+                    // Faz a rolagem suave até o elemento
+                    el.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        // =====================================================================
+        // 3. EFEITO DO MENU AO ROLAR A PÁGINA
+        // =====================================================================
+        // Fica "escutando" o evento de rolagem (scroll) do mouse/dedo
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar'); // Pega o menu superior
+            
+            // Se a página rolou mais de 50 pixels para baixo...
+            if (window.scrollY > 50) {
+                // Adiciona fundo mais claro (glassmorphism), desfoque (blur) e borda inferior ao menu
+                nav.classList.add('bg-white/5', 'backdrop-blur-2xl', 'border-white/10', 'py-3', 'shadow-2xl');
+                nav.classList.remove('py-6', 'border-transparent'); // Diminui o espaçamento e remove borda invisível
+            } else {
+                // Se voltou pro topo, remove o fundo e volta ao tamanho original
+                nav.classList.remove('bg-white/5', 'backdrop-blur-2xl', 'border-white/10', 'py-3', 'shadow-2xl');
+                nav.classList.add('py-6', 'border-transparent');
+            }
+        });
+
+        // =====================================================================
+        // 4. MENU MOBILE (CELULAR)
+        // =====================================================================
+        // Abre e fecha o menu lateral/dropdown em telas pequenas
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden'); // Alterna entre mostrar e esconder (classe 'hidden' do Tailwind)
+        }
+
+        // =====================================================================
+        // 5. LÓGICA DO MODAL DE VÍDEO (PORTFÓLIO)
+        // =====================================================================
+        // Abre o pop-up de vídeo em tela cheia
+        function openVideoModal(videoSrc) {
+            const modal = document.getElementById('video-modal');
+            const localPlayer = document.getElementById('modal-video-player');
+            const youtubePlayer = document.getElementById('modal-youtube-player');
+            const bgVideo = document.getElementById('bg-video');
+            
+            // Pausa o vídeo de fundo
+            if (bgVideo) bgVideo.pause();
+
+            // Detecta se é um link do YouTube (watch, youtu.be, shorts ou embed)
+            if (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be')) {
+                // Esconde player local e mostra YouTube
+                localPlayer.classList.add('hidden');
+                youtubePlayer.classList.remove('hidden');
+                
+                let videoId = '';
+                if (videoSrc.includes('v=')) {
+                    videoId = videoSrc.split('v=')[1].split('&')[0];
+                } else if (videoSrc.includes('youtu.be/')) {
+                    videoId = videoSrc.split('youtu.be/')[1].split('?')[0];
+                } else if (videoSrc.includes('embed/')) {
+                    videoId = videoSrc.split('embed/')[1].split('?')[0];
+                } else if (videoSrc.includes('shorts/')) {
+                    videoId = videoSrc.split('shorts/')[1].split('?')[0];
+                }
+                
+                if (videoId) {
+                    // Verifica se o link original pedia autoplay (como no portfólio)
+                    const autoplay = videoSrc.includes('autoplay=1') ? '1' : '0';
+                    const controls = autoplay === '1' ? '0' : '1';
+                    
+                    // Garante o formato embed com os parâmetros ajustados
+                    youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay}&mute=0&controls=${controls}&rel=0&enablejsapi=1`;
+                } else {
+                    youtubePlayer.src = videoSrc;
+                }
+            } else {
+                // Mostra player local e esconde YouTube
+                youtubePlayer.classList.add('hidden');
+                localPlayer.classList.remove('hidden');
+                localPlayer.src = videoSrc;
+                
+                // Verifica se o link original pedia autoplay
+                if (videoSrc.includes('autoplay=1')) {
+                    localPlayer.play().catch(e => console.log("Autoplay bloqueado"));
+                } else {
+                    localPlayer.pause();
+                }
+            }
+            
+            // Mostra o modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+            }, 10);
+        }
+
+        // Fecha o pop-up de vídeo
+        function closeVideoModal() {
+            const modal = document.getElementById('video-modal');
+            const localPlayer = document.getElementById('modal-video-player');
+            const youtubePlayer = document.getElementById('modal-youtube-player');
+            
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                
+                // Reseta os players
+                localPlayer.pause();
+                localPlayer.src = '';
+                youtubePlayer.src = '';
+                
+                // Volta a tocar o vídeo de fundo
+                const bgVideo = document.getElementById('bg-video');
+                if (bgVideo) {
+                    bgVideo.play().catch(e => console.log("Erro ao retomar fundo"));
+                }
+            }, 300);
+        }
+
+        // =====================================================================
+        // 6. GERAÇÃO DO CAMPO ESTELAR (METODOLOGIA)
+        // =====================================================================
+        // Cria as estrelinhas piscando no fundo da seção de Metodologia
+        function initStarField() {
+            const starField = document.getElementById('star-field'); // Pega o container das estrelas
+            if (starField) {
+                // Cria 100 estrelas através de um loop
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div'); // Cria uma nova <div>
+                    star.className = 'm-cr-star'; // Adiciona a classe CSS que faz ela brilhar
+                    
+                    // Define um tamanho aleatório entre 1px e 3px
+                    const size = Math.random() * 2 + 1;
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    
+                    // Posiciona a estrela aleatoriamente na tela (0% a 100%)
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    
+                    // Define um tempo aleatório para a animação de piscar (entre 2s e 5s)
+                    star.style.setProperty('--d', `${Math.random() * 3 + 2}s`);
+                    
+                    // Adiciona a estrela criada dentro do container na tela
+                    starField.appendChild(star);
+                }
+            }
+        }
+
+        // =====================================================================
+        // 7. CONTROLE INTELIGENTE DO VÍDEO DE FUNDO
+        // =====================================================================
+        // Pausa o vídeo de fundo quando outro vídeo for tocado para evitar lag e distração
+        function initVideoControllers() {
+            const bgVideo = document.getElementById('bg-video'); // Pega o vídeo de fundo principal
+            const allVideos = document.querySelectorAll('video'); // Pega TODOS os vídeos da página
+
+            if (!bgVideo) return; // Se não achar o vídeo de fundo, para a função aqui
+
+            // Passa por todos os vídeos encontrados
+            allVideos.forEach(video => {
+                // Ignora o próprio vídeo de fundo e vídeos que já rodam sozinhos (autoplay)
+                if (video.id === 'bg-video' || video.hasAttribute('autoplay')) return;
+
+                // Quando o usuário der 'play' neste vídeo...
+                video.addEventListener('play', () => {
+                    bgVideo.pause(); // Pausa o vídeo de fundo
+                });
+
+                // Função que checa se deve voltar a tocar o fundo
+                const handleVideoStop = () => {
+                    // Usamos um pequeno delay para garantir que o navegador atualizou o estado do vídeo
+                    setTimeout(() => {
+                        let isAnyPlaying = false;
+                        
+                        // Verifica se ainda tem algum outro vídeo interativo (não-fundo, não-decorativo) tocando
+                        allVideos.forEach(v => {
+                            if (v.id !== 'bg-video' && !v.hasAttribute('autoplay') && !v.paused) {
+                                isAnyPlaying = true;
+                            }
+                        });
+                        
+                        // Se nenhum vídeo de Portfólio ou Serviços estiver tocando, o fundo volta
+                        if (!isAnyPlaying) {
+                            bgVideo.play().catch(e => console.log("Erro ao retomar fundo"));
+                        }
+                    }, 100);
+                };
+
+                // Executa a checagem acima quando o vídeo for pausado ou terminar
+                video.addEventListener('pause', handleVideoStop);
+                video.addEventListener('ended', handleVideoStop);
+            });
+        }
+
+        // =====================================================================
+        // 8. PAUSAR VÍDEOS AO SAIR DA ABA DO NAVEGADOR
+        // =====================================================================
+        // Se o usuário trocar de aba no navegador, os vídeos pausam automaticamente
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                const allVideos = document.querySelectorAll('video');
+                allVideos.forEach(v => {
+                    if (v.id !== 'bg-video' && !v.hasAttribute('autoplay')) {
+                        v.pause();
+                    }
+                });
+                closeVideoModal();
+            }
+        });
+
+        // =====================================================================
+        // 9. EFEITO NEON SEGUINDO O MOUSE NOS CARDS
+        // =====================================================================
+        function initNeonMouseTracking() {
+            const cards = document.querySelectorAll('.neon-border-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        }
+
+        // =====================================================================
+        // 10. REVELAÇÃO COM DESFOQUE AO ROLAR (SCROLL BLUR)
+        // =====================================================================
+        function initScrollReveal() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // Dispara quando 15% do elemento estiver visível
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // Para de observar depois que aparece
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal-blur');
+            revealElements.forEach(el => observer.observe(el));
+        }
+
+        // =====================================================================
+        // 11. INICIALIZAÇÃO GERAL
+        // =====================================================================
+        // Quando a página terminar de carregar completamente (DOMContentLoaded), executa as funções:
+        document.addEventListener('DOMContentLoaded', () => {
+            initStarField(); // Gera as estrelas
+            initVideoControllers(); // Ativa o controle inteligente de vídeos
+            initNeonMouseTracking(); // Ativa o neon seguindo o mouse
+            initScrollReveal(); // Ativa a revelação com desfoque
+        });
+    </script>
+</body>
+</html>
+
