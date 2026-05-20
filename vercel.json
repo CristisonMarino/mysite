@@ -1,1 +1,12 @@
-
+{
+  "rewrites": [
+    {
+      "source": "/portfolio",
+      "destination": "https://portfolio-six-xi-33.vercel.app"
+    },
+    {
+      "source": "/portfolio/:path*",
+      "destination": "https://portfolio-six-xi-33.vercel.app/:path*"
+    }
+  ]
+}
