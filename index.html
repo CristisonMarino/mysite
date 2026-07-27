@@ -1,21 +1,16 @@
-O erro de as imagens não aparecerem nessa sessão específica estava acontecendo
-por conta de um detalhe na matemática do 3D (eixos Z) daquele carrossel.
+Aqui está o código atualizado com as 3 modificações que você pediu, mantendo
+absolutamente todo o restante do site, funções, IA e 3D exatamente iguais ao
+original:
 
-No código anterior, as cartas estavam sendo empurradas para trás em relação ao
-centro e o cilindro estava posicionado na mesma linha da câmera. Isso fazia com
-que o navegador escondesse a parte da frente das cartas (devido à regra de
-otimização backface-visibility: hidden), tornando as imagens invisíveis quando
-elas giravam para a frente. Além disso, o script de substituição automática
-(onerror) estava mascarando o problema.
+1.  Botões do Menu: Os fundos redondos foram removidos. Agora os links são de
+    texto limpo com uma forte linha neon de brilho embaixo (Azul marinho para os
+    links normais, e um gradiente Azul Marinho com Roxo para o Portfólio).
+2.  Espaçamento do Portfólio: O grande buraco (espaçamento) entre os textos de
+    introdução e as imagens na página do Portfólio foi reduzido drasticamente.
+3.  Remoção de Texto: Os textos "Cristison Portfólio, Artes, Vídeos..." foram
+    apagados conforme solicitado.
 
-Fiz a correção cirúrgica na matemática 3D no CSS e no JavaScript apenas dessa
-sessão para que o cilindro seja montado corretamente "para fora" do eixo
-central, garantindo que as imagens fiquem visíveis mantendo todo o formato e
-design 3D original que você pediu. O script de substituição (onerror) também foi
-removido para não bloquear suas imagens locais.
-
-Aqui está o código completo corrigido. Você pode copiar e colar tudo no seu
-arquivo:
+Pode copiar e substituir seu arquivo atual:
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -296,28 +291,60 @@ arquivo:
         }
         .reveal-blur.active { opacity: 1; filter: blur(0); transform: translateY(0); }
 
-        /* NAV LINKS NEON */
+        /* NAV LINKS NEON LINHAS */
         .nav-neon-link {
-            padding: 8px 18px; border-radius: 9999px; border: 1px solid rgba(0,240,255,0.35);
-            color: #00f0ff; font-weight: 600; font-size: 0.82rem; letter-spacing: 0.02em;
-            background: rgba(0,240,255,0.05); white-space: nowrap;
-            box-shadow: 0 0 10px rgba(0,240,255,0.15), inset 0 0 10px rgba(0,240,255,0.04);
+            position: relative;
+            padding: 8px 6px; 
+            color: #ffffff;
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+        .nav-neon-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: #0044ff; /* Azul marinho base */
+            box-shadow: 0 0 10px #0066ff, 0 0 15px #0066ff;
+            opacity: 0.5;
             transition: all 0.3s ease;
         }
-        .nav-neon-link:hover {
-            background: rgba(0,240,255,0.15); color: #ffffff; transform: translateY(-1px);
-            box-shadow: 0 0 20px rgba(0,240,255,0.45), inset 0 0 14px rgba(0,240,255,0.1);
+        .nav-neon-link:hover { color: #00ddff; }
+        .nav-neon-link:hover::after {
+            background: #0088ff;
+            box-shadow: 0 0 15px #0088ff, 0 0 25px #00ddff;
+            opacity: 1;
+            transform: translateY(-2px);
         }
+
         .nav-neon-portfolio {
-            padding: 8px 22px; border-radius: 9999px; border: 1px solid rgba(255,0,170,0.55);
-            color: #ffffff; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.03em; white-space: nowrap;
-            background: linear-gradient(90deg, rgba(191,0,255,0.35), rgba(255,0,170,0.35));
-            box-shadow: 0 0 20px rgba(191,0,255,0.55), 0 0 34px rgba(255,0,170,0.3);
+            position: relative;
+            padding: 8px 6px;
+            color: #ffffff;
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.03em; 
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+        .nav-neon-portfolio::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, #0066ff, #bf00ff);
+            box-shadow: 0 0 12px #0066ff, 0 0 20px #bf00ff;
+            opacity: 0.7;
             transition: all 0.3s ease;
         }
-        .nav-neon-portfolio:hover {
-            transform: translateY(-1px) scale(1.05);
-            box-shadow: 0 0 28px rgba(191,0,255,0.85), 0 0 50px rgba(255,0,170,0.55);
+        .nav-neon-portfolio:hover { color: #d470ff; }
+        .nav-neon-portfolio:hover::after {
+            opacity: 1;
+            box-shadow: 0 0 18px #0088ff, 0 0 30px #d470ff;
+            transform: translateY(-2px);
         }
 
         /* WHATSAPP FLOATING BUTTON */
@@ -445,7 +472,6 @@ arquivo:
             perspective: var(--cyl-perspective);
             display: flex; justify-content: center; align-items: center;
         }
-        /* CORREÇÃO DO EIXO Z NO WRAPPER */
         .cyl-carousel-wrapper {
             position: absolute; transform-style: preserve-3d;
             transform: translateZ(calc(var(--cyl-radius) * -1)); 
@@ -521,7 +547,7 @@ arquivo:
                 </span>
             </a>
 
-            <div class="hidden lg:flex items-center gap-4">
+            <div class="hidden lg:flex items-center gap-6">
                 <a href="#servicos" onclick="scrollToId('servicos'); return false;" class="nav-neon-link">
                     Serviços
                 </a>
@@ -1352,22 +1378,17 @@ arquivo:
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Voltar para Home
             </button>
 
-            <div class="text-center mb-20 relative">
+            <div class="text-center mb-8 relative">
                 <div class="qs-neon-line" style="top: 50%; left: 0; width: 15%; position: absolute; animation-delay: 0s;"></div>
                 <div class="qs-neon-line" style="top: 50%; right: 0; width: 15%; position: absolute; animation-delay: 1s;"></div>
                 <span class="text-neon-cyan text-xs font-bold tracking-[0.5em] uppercase mb-4 block">Trabalhos Selecionados</span>
                 <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-6 qs-title-3d">Nosso Portfólio</h1>
                 <div class="w-32 h-px mx-auto bg-gradient-to-r from-transparent via-neon-cyan to-transparent mb-8" style="box-shadow: 0 0 20px var(--neon-cyan);"></div>
-                <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed mb-12">Cada projeto é uma arquitetura de comunicação única — onde criatividade, tecnologia e estratégia se encontram para gerar impacto real.</p>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed mb-4">Cada projeto é uma arquitetura de comunicação única — onde criatividade, tecnologia e estratégia se encontram para gerar impacto real.</p>
             </div>
 
             <!-- CARROSSEL CRISTISON -->
-            <div class="mt-24 pt-16 border-t border-white/5">
-                <div class="text-center mb-16">
-                    <span class="text-xs font-bold tracking-[0.5em] uppercase mb-4 block" style="color: var(--neon-purple);">Cristison Portfólio</span>
-                    <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-4">Artes, Vídeos & Muito Mais</h2>
-                    <p class="text-slate-400 max-w-2xl mx-auto leading-relaxed">Explore todos os projetos criados — desde artes digitais e propagandas até chatbots, cardápios, logotipos e muito mais.</p>
-                </div>
+            <div class="mt-4 pt-8">
                 <div id="cristison-sections-container"></div>
             </div>
 
@@ -2069,7 +2090,6 @@ arquivo:
            SCRIPT: 3D CYLINDER CAROUSEL (PRODUÇÃO COM IA)
            ========================================= */
         (function init3DCylinderCarousel() {
-            // Mantenha exatamente as imagens que você deseja exibir nesta lista
             const cylImages = [
                 "IA.jpg", "IMOB2.PNG", "house.png", 
                 "branding2.png", "Capturar1AI.png", "vendascapa1.png", 
@@ -2091,16 +2111,11 @@ arquivo:
             cylImages.forEach((src, i) => {
                 const card = document.createElement('div');
                 card.className = 'cyl-card';
-                // CORREÇÃO: O 'translateZ' precisa ser positivo (var(--cyl-radius)) e não negativo
-                // Isso garante que a carta apareça de frente para a câmera e não seja escondida pelo 'backface-visibility'.
                 card.style.transform = `rotateY(${i * anglePerImage}deg) translateZ(var(--cyl-radius)) rotateX(2deg)`;
                 
                 const img = document.createElement('img');
                 img.src = src;
                 img.alt = "Produção IA";
-                
-                // O script onerror agressivo foi removido daqui para evitar que ele sobreponha 
-                // as suas imagens em carregamento caso a internet ou o local de rede demore um pouco.
                 
                 card.appendChild(img);
                 cylinder.appendChild(card);
@@ -2156,20 +2171,3 @@ arquivo:
     </script>
 </body>
 </html>
-
-O que estava causando e o que foi alterado:
-
-1.  O CSS .cyl-carousel-wrapper: Havia uma linha de código jogando o carrossel
-    no mesmo exato local virtual onde ficava a câmera do navegador, criando uma
-    falha gráfica. Corrigi fazendo-o recuar para a posição central perfeita
-    (transform: translateZ(calc(var(--cyl-radius) * -1))).
-2.  O eixo Z das Imagens: No momento em que as cartas eram criadas na aba
-    <script>, elas estavam com eixo -1. Isso invertia as faces dos cards. Como o
-    CSS continha a trava natural backface-visibility: hidden (necessário para
-    cilindros 3D perfeitos), sempre que a imagem girava para frente ela era
-    ocultada e mostrava suas costas (invisível).
-3.  Script Onerror Removido: O script de carregar imagem de testes padrão do
-    placehold.co foi retirado, pois se seu arquivo estiver na pasta certinho,
-    ele poderá carregar livremente. Vale o aviso de revisar nas pastas de imagem
-    se há uso de letras minúsculas e maiúsculas misturadas no formato (.jpg /
-    .JPG e .png/ .PNG). O HTML é sensível a isso.
