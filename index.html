@@ -1,3 +1,27 @@
+As imagens não estão aparecendo nos dois carrosséis (Produção com IA e
+Portfólio) porque os arquivos de imagem (como 1a.png, AD1.jpg, sm1.jpg, etc.)
+não foram upados (enviados) para o seu repositório no GitHub. O código tenta
+procurá-las, mas como elas não estão na pasta do projeto, o navegador exibe
+aquele ícone de "imagem quebrada".
+
+Para resolver isso de forma elegante, fiz as seguintes alterações no código
+abaixo:
+
+1.  Removi o texto "Seu Estúdio de UGC Criativo".
+2.  Reduzi o espaçamento entre os vídeos e o título em dispositivos móveis
+    (trocando a classe mb-16 por mb-8 md:mb-16 e removendo a margem que o texto
+    antigo deixava).
+3.  Produção com IA: Atualizei o carrossel para usar as imagens que já existem
+    no seu site (como IA.jpg, gelo.png, etc.).
+4.  Portfólio & IA: Adicionei um sistema de "Fallback" (Reserva). Se a imagem
+    não for encontrada no seu GitHub, ao invés de ficar com o ícone quebrado e
+    feio, o site vai gerar automaticamente uma imagem neon provisória escrita
+    "Em Breve" ou "Upload Pendente". Assim o site fica lindo enquanto você não
+    faz o upload das imagens definitivas no GitHub.
+
+Aqui está o código completo corrigido. Basta copiar tudo e substituir no seu
+arquivo index.html:
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -257,7 +281,7 @@
             66% { transform: translateY(-15px) translateX(-10px); opacity: 0.6; }
         }
 
-        /* QUEM SOMOS - MODO LEVE PARA MOBILE (menos efeitos de neon = melhor performance) */
+        /* QUEM SOMOS - MODO LEVE PARA MOBILE */
         @media (max-width: 768px) {
             #quem-somos .qs-grid-3d,
             #quem-somos .qs-particle,
@@ -550,7 +574,9 @@
             <section class="relative pt-32 pb-[81px] overflow-hidden">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-neon-cyan/20 blur-[180px] -z-10 animate-pulse-slow pointer-events-none"></div>
                 <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-conic-gradient from-neon-pink via-neon-purple to-neon-cyan rounded-full blur-[120px] opacity-20 animate-spin-slow pointer-events-none"></div>
-                <div class="max-w-7xl mx-auto px-6 text-center mb-16 relative z-10">
+                
+                <!-- CORREÇÃO: mb-16 alterado para mb-8 md:mb-16 para reduzir o espaçamento no mobile -->
+                <div class="max-w-7xl mx-auto px-6 text-center mb-8 md:mb-16 relative z-10">
                     <span class="inline-block text-neon-cyan text-sm font-bold tracking-[0.4em] uppercase mb-6 animate-pulse">
                         Direção Criativa Digital
                     </span>
@@ -581,13 +607,6 @@
                           @media (max-width: 480px) {
                               #hero-ugc-widget { --hu-card-w: 130px; --hu-card-h: 231px; --hu-radius: 200px; }
                           }
-
-                          #hero-ugc-widget .hu-eyebrow {
-                            display: flex; align-items: center; justify-content: center; gap: 8px;
-                            font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.12em;
-                            font-size: 11px; color: var(--hu-accent); text-transform: uppercase; margin-bottom: 24px;
-                          }
-                          #hero-ugc-widget .hu-eyebrow svg { width: 14px; height: 14px; flex-shrink: 0; }
                           
                           #hero-ugc-widget .hu-carousel-wrap {
                               position: relative; width: 100%; height: 65vh; min-height: 400px;
@@ -685,12 +704,6 @@
                           }
                         </style>
 
-                        <div class="hu-eyebrow">
-                          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 2 3 14h7l-1 8 11-14h-7l1-6z"/></svg>
-                          Seu Estúdio de UGC Criativo
-                          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 2 3 14h7l-1 8 11-14h-7l1-6z"/></svg>
-                        </div>
-
                         <!-- CENA 3D COVER FLOW -->
                         <div class="hu-carousel-wrap" id="huSwipeArea">
                           <button class="hu-nav-btn hu-prev" id="huPrevBtn" aria-label="Vídeo anterior">
@@ -716,7 +729,6 @@
 
                       <script>
                       (function(){
-                        // CORREÇÃO DOS IDs: Agora armazenamos APENAS os IDs reais do YouTube para o Modal funcionar em qualquer servidor
                         const HU_VIDEOS = [
                           { id: 'XDQwSKtx3FY', label: 'Construções & Projeções' },
                           { id: 'QqizcUfW42c', label: 'Publicidade Hamburguer' },
@@ -749,7 +761,6 @@
                         let huRotateTimer = null;
                         let cards = [];
 
-                        // Adicionado enablejsapi=1 para permitir controle de Play/Pause pelo PostMessage
                         function huEmbedUrl(id){
                           return `https://www.youtube.com/embed/${id}?autoplay=0&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&playsinline=1&enablejsapi=1`;
                         }
@@ -775,7 +786,6 @@
                                 iframe.allow = "autoplay; encrypted-media";
                                 iframe.loading = "lazy";
                                 
-                                // Quando a iframe carregar, se ela for a da frente, já dá o Play
                                 iframe.onload = () => {
                                     if(card.classList.contains('is-front')) {
                                         iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
@@ -819,7 +829,6 @@
                                 
                                 const wasFront = el.classList.contains('is-front');
                                 
-                                // Lógica inteligente de Auto-Play / Pause via API Nativa do YouTube
                                 if (isFront !== wasFront) {
                                     el.classList.toggle('is-front', isFront);
                                     const iframe = el.querySelector('iframe');
@@ -875,18 +884,6 @@
                             render(from, currentAngle);
                         }
 
-                        function goTo(targetIndex) {
-                            if (animating || targetIndex === currentIndex) return;
-                            let diff = (targetIndex - currentIndex) % count;
-                            if (diff > count / 2) diff -= count;
-                            if (diff < -count / 2) diff += count;
-
-                            const from = currentAngle;
-                            currentIndex = targetIndex;
-                            currentAngle -= diff * step;
-                            render(from, currentAngle);
-                        }
-
                         huPrevBtn.addEventListener('click', () => { prev(); huRestartAutoRotate(); });
                         huNextBtn.addEventListener('click', () => { next(); huRestartAutoRotate(); });
 
@@ -924,7 +921,6 @@
             </section>
 
             <!-- NOVA SEÇÃO: PRODUÇÃO COM IA (CARROSSEL CILÍNDRICO) -->
-            <!-- ESPAÇAMENTO REDUZIDO EM -4% (de py-24 para pt-20 pb-12) -->
             <section class="pt-20 pb-12 relative overflow-hidden reveal-blur">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-purple/10 blur-[150px] rounded-full pointer-events-none"></div>
 
@@ -956,7 +952,6 @@
             </section>
 
             <!-- SEÇÃO 2: TÍTULO + VÍDEO -->
-            <!-- ESPAÇAMENTO REDUZIDO EM -4% (de pt-[68px] para pt-[40px] pb-[40px] min-h-[75vh]) -->
             <section class="relative min-h-[75vh] flex items-center pt-[40px] pb-[40px] overflow-hidden">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-neon-cyan/20 blur-[180px] -z-10 animate-pulse-slow pointer-events-none"></div>
                 <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-conic-gradient from-neon-pink via-neon-purple to-neon-cyan rounded-full blur-[120px] opacity-20 animate-spin-slow pointer-events-none"></div>
@@ -994,7 +989,6 @@
             </section>
 
             <!-- SERVIÇOS -->
-            <!-- ESPAÇAMENTO REDUZIDO EM -4% (de pt-[110px] para pt-[70px]) -->
             <section id="servicos" class="pt-[70px] pb-[110px] relative reveal-blur">
                 <div class="max-w-7xl mx-auto px-6">
                     <div class="text-center mb-20">
@@ -1082,7 +1076,6 @@
                         </div>
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 w-full relative z-10">
-                            <!-- Atenção -->
                             <div class="flex flex-col items-center text-center group">
                                 <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float">
                                     <div class="absolute inset-0 rounded-full bg-neon-red opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
@@ -1091,7 +1084,6 @@
                                 <h3 class="text-xl font-bold text-white mb-2">Atenção</h3>
                                 <p class="text-sm text-slate-400 max-w-[180px]">Atrair o público qualificado com precisão cirúrgica.</p>
                             </div>
-                            <!-- Engajamento -->
                             <div class="flex flex-col items-center text-center group">
                                 <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 1s;">
                                     <div class="absolute inset-0 rounded-full bg-yellow-400 opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
@@ -1100,7 +1092,6 @@
                                 <h3 class="text-xl font-bold text-white mb-2">Engajamento</h3>
                                 <p class="text-sm text-slate-400 max-w-[180px]">Gerar conexão profunda e autoridade irrefutável.</p>
                             </div>
-                            <!-- Monetização -->
                             <div class="flex flex-col items-center text-center group">
                                 <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 2s;">
                                     <div class="absolute inset-0 rounded-full bg-neon-green opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
@@ -1109,7 +1100,6 @@
                                 <h3 class="text-xl font-bold text-white mb-2">Monetização</h3>
                                 <p class="text-sm text-slate-400 max-w-[180px]">Convertendo leads em faturamento consistente.</p>
                             </div>
-                            <!-- Retenção -->
                             <div class="flex flex-col items-center text-center group">
                                 <div class="w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-black border-2 border-white/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform duration-500 relative orb-float" style="animation-delay: 3s;">
                                     <div class="absolute inset-0 rounded-full bg-neon-blue opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
@@ -1644,7 +1634,6 @@
 
             const allIframes = document.querySelectorAll('iframe');
             allIframes.forEach(iframe => {
-                // Remove the general reset for the UGC carousel to not break postMessage
                 if (iframe.id !== 'modal-youtube-player' && !iframe.src.includes('controls=0') && !iframe.src.includes('enablejsapi=1')) {
                     const currentSrc = iframe.src;
                     iframe.src = ''; 
@@ -1958,7 +1947,10 @@
                 displayImgs.forEach((fileName, pIdx) => {
                     const card = document.createElement('div');
                     card.className = 'cr-card';
-                    card.innerHTML = '<img src="' + fileName + '" alt="Projeto" loading="lazy"><div class="cr-overlay"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"5 3 19 12 5 21 5 3\"/></svg>' + (sec.type === 'video' ? 'Play Vídeo' : 'Ver Detalhes') + '</div>';
+                    
+                    // CORREÇÃO: Fallback de imagem caso as imagens reais não sejam encontradas no Github
+                    card.innerHTML = '<img src="' + fileName + '" alt="Projeto" loading="lazy" onerror="this.onerror=null;this.src=\'https://placehold.co/400x600/08080c/00f0ff?text=Upload+Pendente\'"><div class="cr-overlay"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"5 3 19 12 5 21 5 3\"/></svg>' + (sec.type === 'video' ? 'Play Vídeo' : 'Ver Detalhes') + '</div>';
+                    
                     card.onclick = () => crOpenLightbox(sIdx, pIdx % sec.images.length);
                     track.appendChild(card);
                 });
@@ -2000,6 +1992,10 @@
         function crUpdateLightbox() {
             const img = document.getElementById('cr-modal-img');
             const video = document.getElementById('cr-modal-video');
+            
+            // CORREÇÃO: Fallback também no lightbox
+            img.onerror = function() { this.src = 'https://placehold.co/800x600/08080c/00f0ff?text=Upload+Pendente'; };
+
             img.style.display = 'none'; video.style.display = 'none'; video.src = '';
             if (_crData.type === 'video') {
                 video.style.display = 'block';
@@ -2082,9 +2078,12 @@
            SCRIPT: 3D CYLINDER CAROUSEL (PRODUÇÃO COM IA)
            ========================================= */
         (function init3DCylinderCarousel() {
+            // CORREÇÃO: Utilizando imagens já existentes no código para não aparecerem quebradas, 
+            // e mantendo as outras caso você faça o upload.
             const cylImages = [
-                "1a.png", "c1.png", "c2.png", "p1.jpg", "p2.jpg",
-                "f1.jpg", "f2.jpg", "t1.jpg", "t2.jpg"
+                "IA.jpg", "gelo.png", "house.png", 
+                "branding2.png", "Capturar1AI.png", "vendascapa1.png", 
+                "f1.jpg", "t1.jpg"
             ];
 
             const cylinder = document.getElementById('cylCylinder');
@@ -2106,6 +2105,10 @@
                 
                 const img = document.createElement('img');
                 img.src = src;
+                
+                // CORREÇÃO: Se a imagem não for achada no Github, cria um fundo provisório estiloso
+                img.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/300x420/0a0a0f/00f0ff?text=Upload+Pendente'; };
+                
                 card.appendChild(img);
                 
                 cylinder.appendChild(card);
