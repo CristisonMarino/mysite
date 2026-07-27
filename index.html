@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -85,6 +83,7 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
         .page-view.active { display: block; opacity: 1; }
+        .page-view.page-fading-out { display: block; opacity: 0; }
 
         /* GLASSMORPHISM */
         .glass {
@@ -256,6 +255,20 @@
             0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
             33% { transform: translateY(-30px) translateX(15px); opacity: 1; }
             66% { transform: translateY(-15px) translateX(-10px); opacity: 0.6; }
+        }
+
+        /* QUEM SOMOS - MODO LEVE PARA MOBILE (menos efeitos de neon = melhor performance) */
+        @media (max-width: 768px) {
+            #quem-somos .qs-grid-3d,
+            #quem-somos .qs-particle,
+            #quem-somos .qs-neon-line,
+            #quem-somos .qs-neon-line-v { display: none; }
+            #quem-somos .qs-icon-ring::after { animation: none; }
+            #quem-somos .qs-card-3d { transition: none; }
+            #quem-somos .qs-card-3d:hover { transform: none; box-shadow: none; }
+            #quem-somos [style*="bar-sweep-qs"] { animation: none !important; }
+            #quem-somos .absolute.blur-\[150px\],
+            #quem-somos .absolute.blur-\[120px\] { filter: blur(60px); }
         }
         .reveal-blur {
             opacity: 0; filter: blur(15px); transform: translateY(30px);
@@ -663,31 +676,7 @@
                           #hero-ugc-widget .hu-progress-fill.hu-animate { animation: huFillBar 30s linear forwards; }
                           @keyframes huFillBar { from { width: 0%; } to { width: 100%; } }
 
-                          /* MODAL DE THUMBNAILS */
-                          #hu-modal-overlay{ position:fixed; inset:0; z-index:9700; display:none; align-items:center; justify-content:center; background:rgba(2,2,6,0.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); opacity:0; transition:opacity 300ms ease; padding:24px; box-sizing:border-box; }
-                          #hu-modal-overlay.hu-modal-open{ display:flex; opacity:1; }
-                          #hu-modal-box{ position:relative; width:100%; max-width:960px; max-height:88vh; overflow-y:auto; background:rgba(8,8,14,0.98); border:1px solid rgba(0,240,255,0.18); border-radius:24px; padding:28px; box-sizing:border-box; box-shadow:0 30px 90px rgba(0,0,0,0.7), 0 0 60px rgba(0,240,255,0.08); }
-                          #hu-modal-close{ position:absolute; top:18px; right:18px; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); color:#f5f5f2; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:5; transition:background 200ms ease, border-color 200ms ease; }
-                          #hu-modal-close:hover{ background:var(--hu-accent); border-color:var(--hu-accent); color:#0a0a0a; }
-                          #hu-modal-title{ font-family:'Sora','Inter',sans-serif; font-weight:800; font-size:22px; color:#f5f5f2; margin:0 0 6px; }
-                          #hu-modal-subtitle{ font-family:'Inter',sans-serif; font-size:13px; color:rgba(245,245,242,0.55); margin:0 0 22px; }
-                          #hu-modal-player-wrap{ position:relative; width:100%; max-width:520px; margin:0 auto 26px; aspect-ratio:9/16; border-radius:18px; overflow:hidden; background:#111; border:1px solid rgba(255,255,255,0.1); box-shadow:0 20px 50px -12px rgba(0,0,0,0.8), 0 0 40px -8px rgba(0,240,255,0.2); display:none; }
-                          #hu-modal-player-wrap.hu-modal-active{ display:block; }
-                          #hu-modal-player-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-                          #hu-modal-back{ display:none; align-items:center; gap:6px; margin:0 auto 22px; background:none; border:none; color:var(--hu-accent); font-family:'Inter',sans-serif; font-weight:700; font-size:13px; cursor:pointer; letter-spacing:0.04em; text-transform:uppercase; }
-                          #hu-modal-back.hu-modal-active{ display:flex; }
-                          #hu-modal-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:16px; }
-                          .hu-thumb{ position:relative; border-radius:14px; overflow:hidden; cursor:pointer; aspect-ratio:9/16; border:1px solid rgba(255,255,255,0.1); background:#111 linear-gradient(145deg, rgba(0,240,255,0.12), rgba(191,0,255,0.12)); transition:transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease; }
-                          .hu-thumb:hover{ transform:translateY(-4px) scale(1.03); border-color:rgba(0,240,255,0.5); box-shadow:0 14px 30px -10px rgba(0,240,255,0.3); }
-                          .hu-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-                          .hu-thumb .hu-thumb-play{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(3px); pointer-events:none; }
-                          .hu-thumb .hu-thumb-play svg{ width:14px; height:14px; margin-left:2px; }
-                          .hu-thumb .hu-thumb-label{ position:absolute; left:8px; right:8px; bottom:8px; font-family:'Sora','Inter',sans-serif; font-weight:700; font-size:11px; color:#f5f5f2; text-shadow:0 2px 6px rgba(0,0,0,0.8); pointer-events:none; }
-                          
                           @media (max-width:640px){
-                            #hu-modal-box{ padding:18px; border-radius:18px; }
-                            #hu-modal-title{ font-size:18px; }
-                            #hu-modal-grid{ grid-template-columns:repeat(auto-fill, minmax(105px, 1fr)); gap:10px; }
                             #hero-ugc-widget .hu-label { font-size: 12px; left: 10px; right: 10px; bottom: 10px; }
                             #hero-ugc-widget .hu-card.is-front .hu-label { font-size: 14px; bottom: 12px; }
                             #hero-ugc-widget .hu-live { padding: 4px 8px 4px 6px; font-size: 7px; top: 10px; left: 10px; }
@@ -721,28 +710,6 @@
 
                         <div class="hu-progress-track">
                           <div class="hu-progress-fill" id="huProgressFill"></div>
-                        </div>
-
-                        <!-- MODAL DE THUMBNAILS DOS VÍDEOS UGC -->
-                        <div id="hu-modal-overlay">
-                          <div id="hu-modal-box">
-                            <button id="hu-modal-close" onclick="huCloseModal()" aria-label="Fechar">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                            <h3 id="hu-modal-title">Estúdio de UGC</h3>
-                            <p id="hu-modal-subtitle">Escolha uma thumbnail para assistir ao vídeo em destaque</p>
-
-                            <button id="hu-modal-back" onclick="huShowGrid()">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                              Voltar às thumbnails
-                            </button>
-
-                            <div id="hu-modal-player-wrap">
-                              <iframe id="hu-modal-player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                            </div>
-
-                            <div id="hu-modal-grid"></div>
-                          </div>
                         </div>
                       </div>
                 </div>
@@ -822,26 +789,12 @@
                                 overlay.className = 'hu-overlay';
                                 inner.appendChild(overlay);
 
-                                const live = document.createElement('div');
-                                live.className = 'hu-live';
-                                live.innerHTML = `<span></span>AO VIVO`;
-                                inner.appendChild(live);
-
                                 const label = document.createElement('div');
                                 label.className = 'hu-label';
                                 label.textContent = video.label;
                                 inner.appendChild(label);
 
                                 card.appendChild(inner);
-
-                                card.addEventListener('click', () => {
-                                    if(i === currentIndex) {
-                                        huOpenModal(i);
-                                    } else {
-                                        goTo(i);
-                                        huRestartAutoRotate();
-                                    }
-                                });
 
                                 ring.appendChild(card);
                                 return { el: card, angle };
@@ -962,93 +915,9 @@
                           huStartAutoRotate();
                         }
 
-                        /* ===== MODAL DE THUMBNAILS ===== */
-                        const huModalOverlay = document.getElementById('hu-modal-overlay');
-                        const huModalGrid = document.getElementById('hu-modal-grid');
-                        const huModalPlayerWrap = document.getElementById('hu-modal-player-wrap');
-                        const huModalPlayer = document.getElementById('hu-modal-player');
-                        const huModalBack = document.getElementById('hu-modal-back');
-                        const huModalTitle = document.getElementById('hu-modal-title');
-                        const huModalSubtitle = document.getElementById('hu-modal-subtitle');
-
-                        // Puxando Capa nativa do YouTube em Alta Resolução
-                        function huThumbUrl(id){
-                          return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-                        }
-
-                        function huRenderModalGrid(){
-                          huModalGrid.innerHTML = HU_VIDEOS.map((v, idx) => `
-                            <div class="hu-thumb" data-hu-index="${idx}">
-                              <img src="${huThumbUrl(v.id)}" alt="${v.label}" loading="lazy">
-                              <div class="hu-thumb-play">
-                                <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                              </div>
-                              <div class="hu-thumb-label">${v.label}</div>
-                            </div>
-                          `).join('');
-
-                          huModalGrid.querySelectorAll('.hu-thumb').forEach(thumb => {
-                            thumb.addEventListener('click', () => {
-                              const idx = parseInt(thumb.getAttribute('data-hu-index'), 10);
-                              huPlayInModal(idx);
-                            });
-                          });
-                        }
-
-                        function huPlayInModal(idx){
-                          const video = HU_VIDEOS[idx];
-                          if (!video) return;
-                          huModalPlayer.src = `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-                          huModalPlayerWrap.classList.add('hu-modal-active');
-                          huModalBack.classList.add('hu-modal-active');
-                          huModalGrid.style.display = 'none';
-                          huModalTitle.textContent = video.label;
-                          huModalSubtitle.textContent = 'Assistindo em destaque — clique em "Voltar" para ver todas as thumbnails';
-                        }
-
-                        function huShowGrid(){
-                          huModalPlayer.src = '';
-                          huModalPlayerWrap.classList.remove('hu-modal-active');
-                          huModalBack.classList.remove('hu-modal-active');
-                          huModalGrid.style.display = 'grid';
-                          huModalTitle.textContent = 'Estúdio de UGC';
-                          huModalSubtitle.textContent = 'Escolha uma thumbnail para assistir ao vídeo em destaque';
-                        }
-
-                        function huOpenModal(idx){
-                          clearInterval(huRotateTimer);
-                          huModalOverlay.classList.add('hu-modal-open');
-                          document.body.style.overflow = 'hidden';
-                          if (typeof idx === 'number' && !isNaN(idx)){
-                            huPlayInModal(idx);
-                          } else {
-                            huShowGrid();
-                          }
-                        }
-
-                        function huCloseModal(){
-                          huModalOverlay.classList.remove('hu-modal-open');
-                          document.body.style.overflow = '';
-                          huModalPlayer.src = '';
-                          huRestartAutoRotate();
-                        }
-
-                        huModalOverlay.addEventListener('click', (e) => {
-                          if (e.target === huModalOverlay) huCloseModal();
-                        });
-
-                        document.addEventListener('keydown', (e) => {
-                          if (e.key === 'Escape' && huModalOverlay.classList.contains('hu-modal-open')) huCloseModal();
-                        });
-
-                        window.huCloseModal = huCloseModal;
-                        window.huShowGrid = huShowGrid;
-                        window.huOpenModal = huOpenModal;
-
                         initCards();
                         applyRing(currentAngle);
                         updateCardLooks(currentAngle);
-                        huRenderModalGrid();
                         huStartAutoRotate();
                       })();
                       </script>
@@ -1507,13 +1376,6 @@
                 <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-6 qs-title-3d">Nosso Portfólio</h1>
                 <div class="w-32 h-px mx-auto bg-gradient-to-r from-transparent via-neon-cyan to-transparent mb-8" style="box-shadow: 0 0 20px var(--neon-cyan);"></div>
                 <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed mb-12">Cada projeto é uma arquitetura de comunicação única — onde criatividade, tecnologia e estratégia se encontram para gerar impacto real.</p>
-                <div class="flex flex-wrap justify-center gap-4" id="portfolio-filters">
-                    <button onclick="filterPortfolio('todos')" class="portfolio-filter-btn active px-6 py-2 rounded-full border border-neon-cyan text-neon-cyan text-sm font-bold bg-neon-cyan/10 hover:bg-neon-cyan/20 transition-all" data-filter="todos">Todos</button>
-                    <button onclick="filterPortfolio('propaganda')" class="portfolio-filter-btn px-6 py-2 rounded-full border border-white/20 text-slate-400 text-sm font-bold hover:border-neon-cyan hover:text-neon-cyan transition-all" data-filter="propaganda">Propaganda</button>
-                    <button onclick="filterPortfolio('branding')" class="portfolio-filter-btn px-6 py-2 rounded-full border border-white/20 text-slate-400 text-sm font-bold hover:border-neon-cyan hover:text-neon-cyan transition-all" data-filter="branding">Branding</button>
-                    <button onclick="filterPortfolio('ia')" class="portfolio-filter-btn px-6 py-2 rounded-full border border-white/20 text-slate-400 text-sm font-bold hover:border-neon-cyan hover:text-neon-cyan transition-all" data-filter="ia">Conteúdo IA</button>
-                    <button onclick="filterPortfolio('criativo')" class="portfolio-filter-btn px-6 py-2 rounded-full border border-white/20 text-slate-400 text-sm font-bold hover:border-neon-cyan hover:text-neon-cyan transition-all" data-filter="criativo">Criativo</button>
-                </div>
             </div>
 
             <!-- CARROSSEL CRISTISON -->
@@ -1796,7 +1658,15 @@
             if (bgVideo) { bgVideo.play().catch(e => console.log("Autoplay bloqueado")); }
 
             const pages = document.querySelectorAll('.page-view');
-            pages.forEach(p => { p.classList.remove('active'); });
+            pages.forEach(p => {
+                if (p.classList.contains('active') && p.id !== 'page-' + pageId) {
+                    p.classList.remove('active');
+                    p.classList.add('page-fading-out');
+                    setTimeout(() => { p.classList.remove('page-fading-out'); }, 500);
+                } else if (p.id !== 'page-' + pageId) {
+                    p.classList.remove('active');
+                }
+            });
             
             const target = document.getElementById('page-' + pageId);
             if (target) {
@@ -2213,8 +2083,8 @@
            ========================================= */
         (function init3DCylinderCarousel() {
             const cylImages = [
-                "1a.png", "c1.png", "c2.png", "p1.jpg", "p2.jpg",
-                "f1.jpg", "f2.jpg", "t1.jpg", "t2.jpg"
+                "1a.PNG", "c1.PNG", "c2.PNG", "p1.JPG", "p2.JPG",
+                "f1.JPG", "f2.JPG", "t1.JPG", "t2.JPG"
             ];
 
             const cylinder = document.getElementById('cylCylinder');
