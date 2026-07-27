@@ -1,3 +1,21 @@
+O erro de as imagens não aparecerem nessa sessão específica estava acontecendo
+por conta de um detalhe na matemática do 3D (eixos Z) daquele carrossel.
+
+No código anterior, as cartas estavam sendo empurradas para trás em relação ao
+centro e o cilindro estava posicionado na mesma linha da câmera. Isso fazia com
+que o navegador escondesse a parte da frente das cartas (devido à regra de
+otimização backface-visibility: hidden), tornando as imagens invisíveis quando
+elas giravam para a frente. Além disso, o script de substituição automática
+(onerror) estava mascarando o problema.
+
+Fiz a correção cirúrgica na matemática 3D no CSS e no JavaScript apenas dessa
+sessão para que o cilindro seja montado corretamente "para fora" do eixo
+central, garantindo que as imagens fiquem visíveis mantendo todo o formato e
+design 3D original que você pediu. O script de substituição (onerror) também foi
+removido para não bloquear suas imagens locais.
+
+Aqui está o código completo corrigido. Você pode copiar e colar tudo no seu
+arquivo:
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -427,9 +445,10 @@
             perspective: var(--cyl-perspective);
             display: flex; justify-content: center; align-items: center;
         }
+        /* CORREÇÃO DO EIXO Z NO WRAPPER */
         .cyl-carousel-wrapper {
             position: absolute; transform-style: preserve-3d;
-            transform: translateZ(var(--cyl-perspective)); 
+            transform: translateZ(calc(var(--cyl-radius) * -1)); 
         }
         .cyl-carousel-cylinder {
             position: relative; transform-style: preserve-3d;
@@ -547,12 +566,11 @@
         <!-- HOME PAGE -->
         <div id="page-home" class="page-view active">
             
-            <!-- SEÇÃO 1: SHOWCASE UGC (Com Autoplay Inteligente e Vídeo Central 15% Maior) -->
+            <!-- SEÇÃO 1: SHOWCASE UGC -->
             <section class="relative pt-32 pb-[81px] overflow-hidden">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-neon-cyan/20 blur-[180px] -z-10 animate-pulse-slow pointer-events-none"></div>
                 <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-conic-gradient from-neon-pink via-neon-purple to-neon-cyan rounded-full blur-[120px] opacity-20 animate-spin-slow pointer-events-none"></div>
                 
-                <!-- CORREÇÃO: mb-16 alterado para mb-8 md:mb-16 para reduzir o espaçamento no mobile -->
                 <div class="max-w-7xl mx-auto px-6 text-center mb-8 md:mb-16 relative z-10">
                     <span class="inline-block text-neon-cyan text-sm font-bold tracking-[0.4em] uppercase mb-6 animate-pulse">
                         Direção Criativa Digital
@@ -626,9 +644,8 @@
                               transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
                           }
 
-                          /* Efeito de Destaque no Card Central (Escala de +15%) */
                           #hero-ugc-widget .hu-card.is-front .hu-card-inner {
-                              transform: scale(1.15); /* 15% Maior conforme solicitado */
+                              transform: scale(1.15); 
                               box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9), 0 0 0 1px rgba(0,240,255,0.2), 0 0 30px -5px rgba(0,240,255,0.15);
                               border-color: rgba(0, 240, 255, 0.3);
                           }
@@ -681,7 +698,6 @@
                           }
                         </style>
 
-                        <!-- CENA 3D COVER FLOW -->
                         <div class="hu-carousel-wrap" id="huSwipeArea">
                           <button class="hu-nav-btn hu-prev" id="huPrevBtn" aria-label="Vídeo anterior">
                             <svg viewBox="0 0 24 24" stroke="currentColor"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -1925,7 +1941,6 @@
                     const card = document.createElement('div');
                     card.className = 'cr-card';
                     
-                    // CORREÇÃO: Fallback de imagem caso as imagens reais não sejam encontradas no Github
                     card.innerHTML = '<img src="' + fileName + '" alt="Projeto" loading="lazy" onerror="this.onerror=null;this.src=\'https://placehold.co/400x600/08080c/00f0ff?text=Upload+Pendente\'"><div class="cr-overlay"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"5 3 19 12 5 21 5 3\"/></svg>' + (sec.type === 'video' ? 'Play Vídeo' : 'Ver Detalhes') + '</div>';
                     
                     card.onclick = () => crOpenLightbox(sIdx, pIdx % sec.images.length);
@@ -1970,7 +1985,6 @@
             const img = document.getElementById('cr-modal-img');
             const video = document.getElementById('cr-modal-video');
             
-            // CORREÇÃO: Fallback também no lightbox
             img.onerror = function() { this.src = 'https://placehold.co/800x600/08080c/00f0ff?text=Upload+Pendente'; };
 
             img.style.display = 'none'; video.style.display = 'none'; video.src = '';
@@ -2055,8 +2069,7 @@
            SCRIPT: 3D CYLINDER CAROUSEL (PRODUÇÃO COM IA)
            ========================================= */
         (function init3DCylinderCarousel() {
-            // CORREÇÃO: Utilizando imagens já existentes no código para não aparecerem quebradas, 
-            // e mantendo as outras caso você faça o upload.
+            // Mantenha exatamente as imagens que você deseja exibir nesta lista
             const cylImages = [
                 "IA.jpg", "IMOB2.PNG", "house.png", 
                 "branding2.png", "Capturar1AI.png", "vendascapa1.png", 
@@ -2078,16 +2091,18 @@
             cylImages.forEach((src, i) => {
                 const card = document.createElement('div');
                 card.className = 'cyl-card';
-                card.style.transform = `rotateY(${i * anglePerImage}deg) translateZ(calc(var(--cyl-radius) * -1)) rotateX(2deg)`;
+                // CORREÇÃO: O 'translateZ' precisa ser positivo (var(--cyl-radius)) e não negativo
+                // Isso garante que a carta apareça de frente para a câmera e não seja escondida pelo 'backface-visibility'.
+                card.style.transform = `rotateY(${i * anglePerImage}deg) translateZ(var(--cyl-radius)) rotateX(2deg)`;
                 
                 const img = document.createElement('img');
                 img.src = src;
+                img.alt = "Produção IA";
                 
-                // CORREÇÃO: Se a imagem não for achada no Github, cria um fundo provisório estiloso
-                img.onerror = function() { this.onerror = null; this.src = 'https://placehold.co/300x420/0a0a0f/00f0ff?text=Upload+Pendente'; };
+                // O script onerror agressivo foi removido daqui para evitar que ele sobreponha 
+                // as suas imagens em carregamento caso a internet ou o local de rede demore um pouco.
                 
                 card.appendChild(img);
-                
                 cylinder.appendChild(card);
 
                 const dot = document.createElement('div');
@@ -2141,3 +2156,20 @@
     </script>
 </body>
 </html>
+
+O que estava causando e o que foi alterado:
+
+1.  O CSS .cyl-carousel-wrapper: Havia uma linha de código jogando o carrossel
+    no mesmo exato local virtual onde ficava a câmera do navegador, criando uma
+    falha gráfica. Corrigi fazendo-o recuar para a posição central perfeita
+    (transform: translateZ(calc(var(--cyl-radius) * -1))).
+2.  O eixo Z das Imagens: No momento em que as cartas eram criadas na aba
+    <script>, elas estavam com eixo -1. Isso invertia as faces dos cards. Como o
+    CSS continha a trava natural backface-visibility: hidden (necessário para
+    cilindros 3D perfeitos), sempre que a imagem girava para frente ela era
+    ocultada e mostrava suas costas (invisível).
+3.  Script Onerror Removido: O script de carregar imagem de testes padrão do
+    placehold.co foi retirado, pois se seu arquivo estiver na pasta certinho,
+    ele poderá carregar livremente. Vale o aviso de revisar nas pastas de imagem
+    se há uso de letras minúsculas e maiúsculas misturadas no formato (.jpg /
+    .JPG e .png/ .PNG). O HTML é sensível a isso.
