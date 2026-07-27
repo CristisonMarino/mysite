@@ -1,26 +1,3 @@
-As imagens não estão aparecendo nos dois carrosséis (Produção com IA e
-Portfólio) porque os arquivos de imagem (como 1a.png, AD1.jpg, sm1.jpg, etc.)
-não foram upados (enviados) para o seu repositório no GitHub. O código tenta
-procurá-las, mas como elas não estão na pasta do projeto, o navegador exibe
-aquele ícone de "imagem quebrada".
-
-Para resolver isso de forma elegante, fiz as seguintes alterações no código
-abaixo:
-
-1.  Removi o texto "Seu Estúdio de UGC Criativo".
-2.  Reduzi o espaçamento entre os vídeos e o título em dispositivos móveis
-    (trocando a classe mb-16 por mb-8 md:mb-16 e removendo a margem que o texto
-    antigo deixava).
-3.  Produção com IA: Atualizei o carrossel para usar as imagens que já existem
-    no seu site (como IA.jpg, gelo.png, etc.).
-4.  Portfólio & IA: Adicionei um sistema de "Fallback" (Reserva). Se a imagem
-    não for encontrada no seu GitHub, ao invés de ficar com o ícone quebrado e
-    feio, o site vai gerar automaticamente uma imagem neon provisória escrita
-    "Em Breve" ou "Upload Pendente". Assim o site fica lindo enquanto você não
-    faz o upload das imagens definitivas no GitHub.
-
-Aqui está o código completo corrigido. Basta copiar tudo e substituir no seu
-arquivo index.html:
 
 <!DOCTYPE html>
 <html lang="pt-BR">
